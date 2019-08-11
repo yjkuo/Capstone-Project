@@ -9,7 +9,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{6B1DE04F-E40F-8A3B-ADF8-1F1C23F504BA}</ProjectGuid>
+    <ProjectGuid>{958D073B-335E-9A77-B0FF-389F69864A8C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -51,6 +51,26 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\CodeMonkey\Assets.cs" />
+     <Compile Include="Assets\CodeMonkey\CMDebug.cs" />
+     <Compile Include="Assets\CodeMonkey\MonoBehaviours\CameraFollow.cs" />
+     <Compile Include="Assets\CodeMonkey\MonoBehaviours\CameraFollowSetup.cs" />
+     <Compile Include="Assets\CodeMonkey\MonoBehaviours\ComponentActions.cs" />
+     <Compile Include="Assets\CodeMonkey\MonoBehaviours\PositionRendererSorter.cs" />
+     <Compile Include="Assets\CodeMonkey\Utils\Button_Sprite.cs" />
+     <Compile Include="Assets\CodeMonkey\Utils\Button_UI.cs" />
+     <Compile Include="Assets\CodeMonkey\Utils\FunctionPeriodic.cs" />
+     <Compile Include="Assets\CodeMonkey\Utils\FunctionTimer.cs" />
+     <Compile Include="Assets\CodeMonkey\Utils\FunctionUpdater.cs" />
+     <Compile Include="Assets\CodeMonkey\Utils\UI_Bar.cs" />
+     <Compile Include="Assets\CodeMonkey\Utils\UI_BarMultiple.cs" />
+     <Compile Include="Assets\CodeMonkey\Utils\UI_Sprite.cs" />
+     <Compile Include="Assets\CodeMonkey\Utils\UI_TextComplex.cs" />
+     <Compile Include="Assets\CodeMonkey\Utils\UtilsClass.cs" />
+     <Compile Include="Assets\CodeMonkey\Utils\World_Bar.cs" />
+     <Compile Include="Assets\CodeMonkey\Utils\World_Mesh.cs" />
+     <Compile Include="Assets\CodeMonkey\Utils\World_Sprite.cs" />
+     <Compile Include="Assets\Graph\Scripts\Window_Graph.cs" />
      <Compile Include="Assets\Scripts\Controller.cs" />
      <Compile Include="Assets\Scripts\database.cs" />
      <Compile Include="Assets\Scripts\DataGenerator.cs" />
@@ -61,6 +81,7 @@
      <Compile Include="Assets\Scripts\WindowGraph.cs" />
      <None Include="Assets\Resources\unity-chan!\Unity-chan! Model\Art\UnityChanShader\Shader\Unitychan_chara_eye.shader" />
      <None Include="Assets\Resources\unity-chan!\Unity-chan! Model\Art\UnityChanShader\Shader\Unitychan_chara_fuku.shader" />
+     <None Include="Assets\CodeMonkey\README.txt" />
      <None Include="Assets\Resources\unity-chan!\Unity-chan! Model\Art\UnityChanShader\Shader\Unitychan_chara_fuku_ds.shader" />
      <None Include="Assets\Resources\unity-chan!\Unity-chan! Model\Art\UnityChanShader\Shader\Unitychan_chara_eye_blend.shader" />
      <None Include="Assets\Resources\unity-chan!\Unity-chan! Model\Art\UnityChanShader\Shader\Unitychan_chara_hair_ds.shader" />
