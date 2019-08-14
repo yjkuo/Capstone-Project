@@ -24,7 +24,7 @@ public class Window_Graph : MonoBehaviour {
         dashTemplateY = graphContainer.Find("dashTemplateY").GetComponent<RectTransform>();
         gameObjectList = new List<GameObject>();
 
-        List<int> valueList = new List<int>() { 5, 6, 8, 14, 19, 18, 17, 15, 13, 17, 25, 37, 40, 36, 33 };
+        List<float> valueList = new List<float>() { 5, 6, 8, 14, 19, 18, 17, 15, 13, 17, 25, 37, 40, 36, 33 };
         ShowGraph(valueList);
     }
 
@@ -40,7 +40,7 @@ public class Window_Graph : MonoBehaviour {
         return gameObject;
     }
 
-    private void ShowGraph(List<int> valueList) {
+    public void ShowGraph(List<float> valueList) {
         foreach(GameObject gameObject in gameObjectList)
         {
             Destroy(gameObject);
@@ -63,8 +63,8 @@ public class Window_Graph : MonoBehaviour {
                 yMinimum = value;
             }
         }
-        yMaximum = yMaximum + (yMaximum - yMinimum) * 0.2f;
-        yMinimum = yMinimum - (yMaximum - yMinimum) * 0.2f;
+        yMaximum = yMaximum + (yMaximum - yMinimum) * 0.2f+1;
+        yMinimum = yMinimum - (yMaximum - yMinimum) * 0.2f-1;
         //float xSize = 50f;
         float xSize = graphContainer.sizeDelta.x/valueList.Count;
         GameObject lastCircleGameObject = null;
