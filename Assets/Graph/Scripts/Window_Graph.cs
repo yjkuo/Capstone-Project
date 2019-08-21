@@ -9,11 +9,13 @@ using CodeMonkey.Utils;
 public class Window_Graph : MonoBehaviour {
 
     [SerializeField] private Sprite circleSprite;
+    [SerializeField] private Slider slider;
     private RectTransform graphContainer;
     private RectTransform labelTemplateX;
     private RectTransform labelTemplateY;
     private RectTransform dashTemplateX;
     private RectTransform dashTemplateY;
+    private RectTransform markLine;
     private List<GameObject> gameObjectList;
 
     private void Awake() {
@@ -22,10 +24,11 @@ public class Window_Graph : MonoBehaviour {
         labelTemplateY = graphContainer.Find("labelTemplateY").GetComponent<RectTransform>();
         dashTemplateX = graphContainer.Find("dashTemplateX").GetComponent<RectTransform>();
         dashTemplateY = graphContainer.Find("dashTemplateY").GetComponent<RectTransform>();
+        markLine = graphContainer.Find("markLine").GetComponent<RectTransform>();
         gameObjectList = new List<GameObject>();
 
         List<float> valueList = new List<float>() { 5, 6, 8, 14, 19, 18, 17, 15, 13, 17, 25, 37, 40, 36, 33 };
-        ShowGraph(valueList);
+        ShowGraph(valueList,false);
     }
 
     private GameObject CreateCircle(Vector2 anchoredPosition) {
@@ -40,12 +43,16 @@ public class Window_Graph : MonoBehaviour {
         return gameObject;
     }
 
-    public void ShowGraph(List<float> valueList) {
-        foreach(GameObject gameObject in gameObjectList)
+    public void ShowGraph(List<float> valueList, bool inSameGraph) {
+        if (!inSameGraph)
         {
-            Destroy(gameObject);
+            foreach (GameObject gameObject in gameObjectList)
+            {
+                Destroy(gameObject);
+            }
+            gameObjectList.Clear();
         }
-        gameObjectList.Clear();
+       
         float graphHeight = graphContainer.sizeDelta.y;
         int maxVisibleValueAmount = 5;
 
@@ -125,6 +132,11 @@ public class Window_Graph : MonoBehaviour {
         rectTransform.anchoredPosition = dotPositionA + dir * distance * .5f;
         rectTransform.localEulerAngles = new Vector3(0, 0, UtilsClass.GetAngleFromVectorFloat(dir));
         return gameObject;
+    }
+    void Update()
+    {
+        float xPos = slider.normalizedValue * graphContainer.sizeDelta.x;
+        markLine.anchoredPosition = new Vector2(xPos, markLine.anchoredPosition.y);
     }
 
 }

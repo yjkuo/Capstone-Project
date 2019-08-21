@@ -81,6 +81,7 @@
      <Compile Include="Assets\Scripts\WindowGraph.cs" />
      <None Include="Assets\Resources\unity-chan!\Unity-chan! Model\Art\UnityChanShader\Shader\Unitychan_chara_eye.shader" />
      <None Include="Assets\Resources\unity-chan!\Unity-chan! Model\Art\UnityChanShader\Shader\Unitychan_chara_fuku.shader" />
+     <None Include="Assets\Resources\打擊2_export.txt" />
      <None Include="Assets\CodeMonkey\README.txt" />
      <None Include="Assets\Resources\unity-chan!\Unity-chan! Model\Art\UnityChanShader\Shader\Unitychan_chara_fuku_ds.shader" />
      <None Include="Assets\Resources\unity-chan!\Unity-chan! Model\Art\UnityChanShader\Shader\Unitychan_chara_eye_blend.shader" />
@@ -90,9 +91,9 @@
      <None Include="Assets\Resources\data1.txt" />
      <None Include="Assets\Resources\unity-chan!\Unity-chan! Model\Art\Stage\Shader\AlphaMask.shader" />
      <None Include="Assets\Resources\unity-chan!\Unity-chan! Model\Art\UnityChanShader\Shader\Unitychan_chara_eyelash_blend.shader" />
+     <None Include="Assets\Resources\打擊_export.txt" />
      <None Include="Assets\Resources\unity-chan!\Unity-chan! Model\Art\UnityChanShader\Shader\Unitychan_chara_hada.shader" />
      <None Include="Assets\Resources\unity-chan!\Unity-chan! Model\Art\UnityChanShader\Shader\Unitychan_chara_hada_blend.shader" />
-     <None Include="Assets\Resources\data.txt" />
  <Reference Include="UnityEngine.UI">
  <HintPath>D:/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>
@@ -176,6 +177,9 @@
  </Reference>
  <Reference Include="UnityEngine.StandardEvents">
  <HintPath>C:/Users/User/AppData/LocalLow/Unity/cache/packages/packages.unity.com/com.unity.standardevents@1.0.10/UnityEngine.StandardEvents.dll</HintPath>
+ </Reference>
+ <Reference Include="System.Windows.Forms">
+ <HintPath>C:/Users/User/Documents/Capstone-Project/Assets/Plugins/System.Windows.Forms.dll</HintPath>
  </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

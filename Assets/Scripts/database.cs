@@ -8,14 +8,22 @@ using System;
 public class database : MonoBehaviour {
     public struct Item
     {
-        public double x;
-        public double y;
-        public double z;
-        public Item(double cordx,double cordy,double cordz)
+        public Vector3 pos;
+        public Vector3 speed;
+        public Vector3 acceleration;
+        public Item(float posx, float posy, float posz,
+                    float spdx, float spdy, float spdz,
+                    float accx, float accy, float accz)
         {
-            x = cordx;
-            y = cordy;
-            z = cordz;
+            pos.x = posx;
+            pos.y = posy;
+            pos.z = posz;
+            speed.x = spdx;
+            speed.y = spdy;
+            speed.z = spdz;
+            acceleration.x = accx;
+            acceleration.y = accy;
+            acceleration.z = accz;
         }
     }
     public struct Body
@@ -42,7 +50,7 @@ public class database : MonoBehaviour {
     }
     // Use this for initialization
     void Start () {
-        getDatabase("Assets/Resources/data1.txt");
+        getDatabase("Assets/Resources/打擊_export.txt");
 	}
 	
 	// Update is called once per frame
@@ -79,10 +87,18 @@ public class database : MonoBehaviour {
         string[] linedatas = line.Split((char[])null, StringSplitOptions.RemoveEmptyEntries);
         for (int i = 0; i < names.Length-1; i++)
         {
-            posDatas[i].Add(new Item(double.Parse(linedatas[i * 3 + 1]),
-                              double.Parse(linedatas[i * 3 + 2]),
-                              double.Parse(linedatas[i * 3 + 3])));
-            sw.Write(linedatas[i * 3 + 1] + "," + linedatas[i * 3 + 2] + "," + linedatas[i * 3 + 3]);
+            posDatas[i].Add(new Item(float.Parse(linedatas[i * 3 + 1]),
+                                    float.Parse(linedatas[i * 3 + 2]),
+                                    float.Parse(linedatas[i * 3 + 3]),
+                                    float.Parse(linedatas[i * 3 + 4]),
+                                    float.Parse(linedatas[i * 3 + 5]),
+                                    float.Parse(linedatas[i * 3 + 6]),
+                                    float.Parse(linedatas[i * 3 + 7]),
+                                    float.Parse(linedatas[i * 3 + 8]),
+                                    float.Parse(linedatas[i * 3 + 9])));
+            sw.Write(linedatas[i * 3 + 1] + "," + linedatas[i * 3 + 2] + "," + linedatas[i * 3 + 3] + ","
+                + linedatas[i * 3 + 4] + "," + linedatas[i * 3 + 5] + "," + linedatas[i * 3 + 6] + ","
+                + linedatas[i * 3 + 7] + "," + linedatas[i * 3 + 8] + "," + linedatas[i * 3 + 9]);
             sw.Write(",,");
         }
         sw.WriteLine();        
