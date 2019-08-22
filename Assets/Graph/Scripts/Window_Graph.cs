@@ -80,8 +80,8 @@ public class Window_Graph : MonoBehaviour {
             float yPosition = ((valueList[i] - yMinimum) / (yMaximum - yMinimum)) * graphHeight;
             GameObject circleGameObject = CreateCircle(new Vector2(xPosition, yPosition));
             gameObjectList.Add(circleGameObject);
-            if (lastCircleGameObject != null) {
-                GameObject dotConnection = CreateDotConnection(lastCircleGameObject.GetComponent<RectTransform>().anchoredPosition, circleGameObject.GetComponent<RectTransform>().anchoredPosition);
+            if (lastCircleGameObject != null) {                
+                GameObject dotConnection = CreateDotConnection(lastCircleGameObject.GetComponent<RectTransform>().anchoredPosition, circleGameObject.GetComponent<RectTransform>().anchoredPosition,inSameGraph);
                 gameObjectList.Add(dotConnection); 
             }
             lastCircleGameObject = circleGameObject;
@@ -119,10 +119,13 @@ public class Window_Graph : MonoBehaviour {
         }
     }
 
-    private GameObject CreateDotConnection(Vector2 dotPositionA, Vector2 dotPositionB) {
+    private GameObject CreateDotConnection(Vector2 dotPositionA, Vector2 dotPositionB, bool sameGraph) {
         GameObject gameObject = new GameObject("dotConnection", typeof(Image));
         gameObject.transform.SetParent(graphContainer, false);
-        gameObject.GetComponent<Image>().color = new Color(1,1,1, .5f);
+        if(sameGraph)
+            gameObject.GetComponent<Image>().color =  new Color(1, 1, 0, .5f);
+        else
+            gameObject.GetComponent<Image>().color = new Color(1, 1, 1, .5f);
         RectTransform rectTransform = gameObject.GetComponent<RectTransform>();
         Vector2 dir = (dotPositionB - dotPositionA).normalized;
         float distance = Vector2.Distance(dotPositionA, dotPositionB);
@@ -132,6 +135,14 @@ public class Window_Graph : MonoBehaviour {
         rectTransform.anchoredPosition = dotPositionA + dir * distance * .5f;
         rectTransform.localEulerAngles = new Vector3(0, 0, UtilsClass.GetAngleFromVectorFloat(dir));
         return gameObject;
+    }
+    public void clearGraph()
+    {
+        foreach (GameObject gameObject in gameObjectList)
+        {
+            Destroy(gameObject);
+        }
+        gameObjectList.Clear();
     }
     void Update()
     {

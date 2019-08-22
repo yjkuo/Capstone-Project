@@ -11,17 +11,20 @@ public class Controller : MonoBehaviour {
     private Animator anim;
     public Slider slider;
     public Dropdown mDropdown;
+    private Transform circlePlate;
     [SerializeField]    private Window_Graph windowGraph;
     private bool isplaying = false;
     // Rotation attributes
 
     void Start () {
+        //circlePlate = transform.Find("CirclePlate").transform;
         anim = GetComponent<Animator>();
         anim.speed = 0f;
 	}
 	
 	// Update is called once per frame
 	void Update () {
+        //circlePlate.transform.position = new Vector3(circlePlate.transform.position.x,transform.position.y,circlePlate.transform.position.z); 
         //anim.Play("swing", -1, slider.normalizedValue);
         if (Input.GetMouseButtonDown(1))
         {
@@ -47,8 +50,9 @@ public class Controller : MonoBehaviour {
             isplaying = false;
         }
         else
-        {            
-            anim.Play("swing", -1, slider.normalizedValue);
+        {
+            Dropdown dp = GameObject.Find("PlayUI/Canvas/Panel/bodyInput/animOption").GetComponent<Dropdown>();
+            anim.Play(dp.options[dp.value].text, -1, slider.normalizedValue);
             anim.speed = 1f;
             isplaying = true;
         }
@@ -56,10 +60,12 @@ public class Controller : MonoBehaviour {
     }
     public void triggerStop()
     {
-        anim.Play("swing", -1, 0f);
+        Dropdown dp = GameObject.Find("PlayUI/Canvas/Panel/bodyInput/animOption").GetComponent<Dropdown>();
+        anim.Play(dp.options[dp.value].text, -1, 0f);
+        isplaying = false;
         slider.value = 0;
         anim.speed = 0f;
-        transform.position = new Vector3(-0.54f, 0.4f, -8.12f);
+        transform.position = new Vector3(-0.77f, 0.4f, -8.12f);
         transform.rotation = Quaternion.Euler(0f, 180f, 0f);
     }
     public void historyBtnClicked()

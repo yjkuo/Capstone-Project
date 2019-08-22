@@ -22,7 +22,8 @@ public class Playbar : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
     public void OnPointerUp(PointerEventData e)
     {
         slide = false;
-        anim.Play("swing", -1, slider.normalizedValue);
+        Dropdown dp = GameObject.Find("PlayUI/Canvas/Panel/bodyInput/animOption").GetComponent<Dropdown>();
+        anim.Play(dp.options[dp.value].text, -1, slider.normalizedValue);
 
     }
     // Update is called once per frame
