@@ -26,7 +26,8 @@ public class Controller : MonoBehaviour {
 	void Update () {
         //circlePlate.transform.position = new Vector3(circlePlate.transform.position.x,transform.position.y,circlePlate.transform.position.z); 
         //anim.Play("swing", -1, slider.normalizedValue);
-        if (Input.GetMouseButtonDown(1))
+        
+        if (Input.GetMouseButtonDown(0))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
@@ -35,10 +36,8 @@ public class Controller : MonoBehaviour {
             if (Physics.Raycast(ray, out ray_cast_hit))
             {
                 Transform trans = ray_cast_hit.transform;
-                if (trans.CompareTag("Selectable"))
-                {
-                    Debug.Log(trans.name.ToString() + "我被點了一下");
-                }
+            
+                Debug.Log(trans.name.ToString() + "我被點了一下");
             }
         }
     }

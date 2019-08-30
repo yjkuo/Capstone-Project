@@ -71,14 +71,15 @@
      <Compile Include="Assets\CodeMonkey\Utils\World_Mesh.cs" />
      <Compile Include="Assets\CodeMonkey\Utils\World_Sprite.cs" />
      <Compile Include="Assets\Graph\Scripts\Window_Graph.cs" />
+     <Compile Include="Assets\Scripts\animationDropdown.cs" />
      <Compile Include="Assets\Scripts\Controller.cs" />
      <Compile Include="Assets\Scripts\database.cs" />
      <Compile Include="Assets\Scripts\DataGenerator.cs" />
      <Compile Include="Assets\Scripts\DropdownScript.cs" />
+     <Compile Include="Assets\Scripts\graphClicked.cs" />
      <Compile Include="Assets\Scripts\Playbar.cs" />
      <Compile Include="Assets\Scripts\Rotate.cs" />
      <Compile Include="Assets\Scripts\SelectedObject.cs" />
-     <Compile Include="Assets\Scripts\WindowGraph.cs" />
      <None Include="Assets\Resources\unity-chan!\Unity-chan! Model\Art\UnityChanShader\Shader\Unitychan_chara_eye.shader" />
      <None Include="Assets\Resources\unity-chan!\Unity-chan! Model\Art\UnityChanShader\Shader\Unitychan_chara_fuku.shader" />
      <None Include="Assets\Resources\打擊2_export.txt" />

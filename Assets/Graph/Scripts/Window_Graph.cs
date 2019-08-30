@@ -17,6 +17,11 @@ public class Window_Graph : MonoBehaviour {
     private RectTransform dashTemplateY;
     private RectTransform markLine;
     private List<GameObject> gameObjectList;
+    private GameObject tooltipGameObject;
+    //cache parameters
+    private List<float> valueList;
+    private bool inSameGraph;
+    private int maxVisibleValueAmount = -1;
 
     private void Awake() {
         graphContainer = transform.Find("graphContainer").GetComponent<RectTransform>();
@@ -25,10 +30,20 @@ public class Window_Graph : MonoBehaviour {
         dashTemplateX = graphContainer.Find("dashTemplateX").GetComponent<RectTransform>();
         dashTemplateY = graphContainer.Find("dashTemplateY").GetComponent<RectTransform>();
         markLine = graphContainer.Find("markLine").GetComponent<RectTransform>();
+        //tooltipGameObject = graphContainer.Find("tootip").gameObject;
         gameObjectList = new List<GameObject>();
 
+
         List<float> valueList = new List<float>() { 5, 6, 8, 14, 19, 18, 17, 15, 13, 17, 25, 37, 40, 36, 33 };
-        ShowGraph(valueList,false);
+        ShowGraph(valueList, false);
+        transform.Find("decreaseBtn").GetComponent<Button_UI>().ClickFunc = () =>
+        {
+            ShowGraph(this.valueList, this.inSameGraph, this.maxVisibleValueAmount + 1);
+        };
+        transform.Find("increaseBtn").GetComponent<Button_UI>().ClickFunc = () =>
+        {
+            ShowGraph(this.valueList, this.inSameGraph, this.maxVisibleValueAmount - 1);
+        };
     }
 
     private GameObject CreateCircle(Vector2 anchoredPosition) {
@@ -43,7 +58,10 @@ public class Window_Graph : MonoBehaviour {
         return gameObject;
     }
 
-    public void ShowGraph(List<float> valueList, bool inSameGraph) {
+    public void ShowGraph(List<float> valueList, bool inSameGraph, int maxVisibleValueAmount = -1) {
+        this.valueList = valueList;
+        this.inSameGraph = inSameGraph;
+
         if (!inSameGraph)
         {
             foreach (GameObject gameObject in gameObjectList)
@@ -52,15 +70,23 @@ public class Window_Graph : MonoBehaviour {
             }
             gameObjectList.Clear();
         }
-       
+        if(maxVisibleValueAmount <= 0)
+        {
+            maxVisibleValueAmount = valueList.Count;
+        }
+        if (maxVisibleValueAmount > valueList.Count)
+        {
+            maxVisibleValueAmount = valueList.Count;
+        }
+        this.maxVisibleValueAmount = maxVisibleValueAmount;
         float graphHeight = graphContainer.sizeDelta.y;
-        int maxVisibleValueAmount = 5;
 
         float yMaximum = valueList[0];
         float yMinimum = valueList[0];
 
-        foreach(int value in valueList)
+        for(int i = Mathf.Max(valueList.Count - maxVisibleValueAmount,0); i < valueList.Count; i++)
         {
+            float value = valueList[i];
             if (value > yMaximum)
             {
                 yMaximum = value;
@@ -70,13 +96,18 @@ public class Window_Graph : MonoBehaviour {
                 yMinimum = value;
             }
         }
-        yMaximum = yMaximum + (yMaximum - yMinimum) * 0.2f+1;
-        yMinimum = yMinimum - (yMaximum - yMinimum) * 0.2f-1;
+        float yDif = yMaximum - yMinimum;
+        if (yDif <= 0)
+            yDif = 5f;
+        yMaximum = yMaximum + yDif * 0.2f+1;
+        yMinimum = yMinimum - yDif * 0.2f-1;
         //float xSize = 50f;
-        float xSize = graphContainer.sizeDelta.x/valueList.Count;
+        float xSize = graphContainer.sizeDelta.x/maxVisibleValueAmount +1;
         GameObject lastCircleGameObject = null;
-        for (int i = 0; i < valueList.Count; i++) {
-            float xPosition = xSize + i * xSize;
+
+        int xIndex = 0;
+        for (int i = Mathf.Max(valueList.Count - maxVisibleValueAmount, 0); i < valueList.Count; i++) {
+            float xPosition = xSize + xIndex * xSize;
             float yPosition = ((valueList[i] - yMinimum) / (yMaximum - yMinimum)) * graphHeight;
             GameObject circleGameObject = CreateCircle(new Vector2(xPosition, yPosition));
             gameObjectList.Add(circleGameObject);
@@ -98,6 +129,7 @@ public class Window_Graph : MonoBehaviour {
             dashX.gameObject.SetActive(true);
             dashX.anchoredPosition = new Vector2(xPosition, -3f);
             gameObjectList.Add(dashX.gameObject);
+            xIndex++;
 
         }
         int seperatorCount = 10;
@@ -117,8 +149,25 @@ public class Window_Graph : MonoBehaviour {
             dashY.anchoredPosition = new Vector2(-4f, nomalizedValue * graphHeight);
             gameObjectList.Add(dashY.gameObject);
         }
+        //showTooltip("this is a tooltip", new Vector2(100, 100));
     }
-
+    /*
+    private void showTooltip(string tooltipText, Vector2 anchoredPosition)
+    {
+        tooltipGameObject.SetActive(true);
+        tooltipGameObject.transform.Find("text").GetComponent<Text>().text = tooltipText;
+        float padding = 4f;
+        Vector2 backSize = new Vector2(
+            tooltipGameObject.transform.Find("text").GetComponent<Text>().preferredWidth + padding * 2f,
+            tooltipGameObject.transform.Find("text").GetComponent<Text>().preferredHeight + padding * 2f
+            );
+        tooltipGameObject.transform.Find("background").GetComponent<RectTransform>().sizeDelta = backSize;
+        tooltipGameObject.transform.SetAsLastSibling();
+    }
+    private void hideTooltip()
+    {
+        tooltipGameObject.SetActive(false);
+    }*/
     private GameObject CreateDotConnection(Vector2 dotPositionA, Vector2 dotPositionB, bool sameGraph) {
         GameObject gameObject = new GameObject("dotConnection", typeof(Image));
         gameObject.transform.SetParent(graphContainer, false);
@@ -146,8 +195,11 @@ public class Window_Graph : MonoBehaviour {
     }
     void Update()
     {
-        float xPos = slider.normalizedValue * graphContainer.sizeDelta.x;
-        markLine.anchoredPosition = new Vector2(xPos, markLine.anchoredPosition.y);
+        if (!transform.Find("graphContainer").GetComponent<graphClicked>().graphDrag)
+        {
+            float xPos = slider.normalizedValue * graphContainer.sizeDelta.x;
+            markLine.anchoredPosition = new Vector2(xPos, markLine.anchoredPosition.y);
+        }
     }
 
 }

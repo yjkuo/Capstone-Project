@@ -4,7 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class Playbar : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
+public class Playbar : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragHandler
+{
 
     // Use this for initialization
     Slider slider;
@@ -19,12 +20,15 @@ public class Playbar : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
     {    
         slide = true;
     }
+    public void OnDrag(PointerEventData e)
+    {
+        Dropdown dp = GameObject.Find("PlayUI/Canvas/Panel/bodyInput/animOption").GetComponent<Dropdown>();
+        anim.Play(dp.options[dp.value].text, -1, slider.normalizedValue);
+    }
     public void OnPointerUp(PointerEventData e)
     {
         slide = false;
-        Dropdown dp = GameObject.Find("PlayUI/Canvas/Panel/bodyInput/animOption").GetComponent<Dropdown>();
-        anim.Play(dp.options[dp.value].text, -1, slider.normalizedValue);
-
+        
     }
     // Update is called once per frame
     void Update () {

@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Character
   - Database
+  - Selectable
   layers:
   - Default
   - TransparentFX
