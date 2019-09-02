@@ -67,10 +67,15 @@ public class database : MonoBehaviour {
         {
             getDatabase(dialog.FileName);
             Dropdown dropdown = GameObject.Find("PlayUI/Canvas/Panel/bodyInput/inputFileOption").GetComponent<Dropdown>();
-            dropdown.options.Add(new Dropdown.OptionData() { text = Path.GetFileName(dialog.FileName) });
+            string filename = Path.GetFileName(dialog.FileName);
+            dropdown.options.Add(new Dropdown.OptionData() { text = filename.Remove(filename.Length-4) });
             DropdownScript bodyOption = GameObject.Find("PlayUI/Canvas/Panel/bodyInput/bodyOption").GetComponent<DropdownScript>();
             bodyOption.putBodyNames();
             bodyOption.gameObject.SetActive(true);
+            Dropdown dataTypeOption = GameObject.Find("PlayUI/Canvas/Panel/bodyInput/dataTypeOption").GetComponent<Dropdown>();
+            dataTypeOption.gameObject.SetActive(true);
+            Dropdown dirOption = GameObject.Find("PlayUI/Canvas/Panel/bodyInput/dirOption").GetComponent<Dropdown>();
+            dirOption.gameObject.SetActive(true);
         }
 
     }
@@ -153,6 +158,36 @@ public class database : MonoBehaviour {
         else goto AddItem;
         */
     }
+    public void writeCsvFile(int fileIndex, string path)
+    {
+        FileInfo fin = new FileInfo(path);
+        StreamWriter sw = fin.CreateText();
+        string[] names = fileBodyNames[fileIndex];
+        for (int i = 1; i < names.Length - 1; i++)
+        {
+            sw.Write(names[i] + ",,,,,,,,,,");
+        }
+        sw.WriteLine(names[names.Length - 1]);
+        for (int i = 1; i < names.Length; i++)
+        {
+            sw.Write("x-axis,y-axis,z-axis,x-speed,y-speed,z-speed,x-acc,y-acc,z-acc,,");
+        }
+        sw.WriteLine();
+        Dropdown inputFileOption = GameObject.Find("PlayUI/Canvas/Panel/bodyInput/inputFileOption").GetComponent<Dropdown>();
+        List<Body> bodyDB = fileDatabase[fileIndex];
+        for (int j = 0; j < bodyDB[0].data.Count; ++j)
+        {
+            for (int i = 0; i < bodyDB.Count; i++)
+            {
+                sw.Write(bodyDB[i].data[j].pos.x + "," + bodyDB[i].data[j].pos.y + "," + bodyDB[i].data[j].pos.z + ","
+                    + bodyDB[i].data[j].speed.x + "," + bodyDB[i].data[j].speed.y + "," + bodyDB[i].data[j].speed.z + ","
+                    + bodyDB[i].data[j].acceleration.x + "," + bodyDB[i].data[j].acceleration.y + "," + bodyDB[i].data[j].acceleration.z);
+                sw.Write(",,");
+            }
+            sw.WriteLine();
+        }
+    }
+
     public Body getDatabyName(int fileIndex, string name)
     {
         List<Body> bodyDatabase = fileDatabase[fileIndex];

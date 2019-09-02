@@ -66,6 +66,9 @@ public class Controller : MonoBehaviour {
         anim.speed = 0f;
         transform.position = new Vector3(-0.97f, 0.4f, -8.12f);
         transform.rotation = Quaternion.Euler(0f, 180f, 0f);
+        GameObject coor = GameObject.Find("coordinate").gameObject;
+        coor.transform.position = new Vector3(-1.33f, 0.44f, -7.98f);
+        coor.transform.rotation = Quaternion.Euler(0f, 180f, 0f);
     }
     public void historyBtnClicked()
     {
@@ -186,7 +189,17 @@ public class Controller : MonoBehaviour {
     }
     public void openCsvFileBtnClicked()
     {
-        Process.Start("C:\\Users\\User\\Documents\\Capstone-Project\\Assets\\Resources\\Out1.csv");
+        FolderBrowserDialog dialog = new FolderBrowserDialog();
+        dialog.Description = "請選擇輸出資料夾";
+        if (dialog.ShowDialog() == DialogResult.OK)
+        {
+            UnityEngine.Debug.Log(dialog.SelectedPath);
+            database db = GameObject.FindGameObjectWithTag("Database").GetComponent<database>();
+            Dropdown inputFileOption = GameObject.Find("PlayUI/Canvas/Panel/bodyInput/inputFileOption").GetComponent<Dropdown>();
+            string path = dialog.SelectedPath + "/" + inputFileOption.options[inputFileOption.value].text + ".csv";
+            db.writeCsvFile(inputFileOption.value, path);
+        }
+            //Process.Start("C:\\Users\\User\\Documents\\Capstone-Project\\Assets\\Resources\\Out1.csv");
     }
     public void childObjClicked(SelectedObject obj)
     {      

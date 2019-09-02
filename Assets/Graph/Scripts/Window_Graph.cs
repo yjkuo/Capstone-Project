@@ -26,6 +26,7 @@ public class Window_Graph : MonoBehaviour {
     private int maxVisibleValueAmount = -1;
     private int now=0;
     int firstClicked = 0;
+    bool isZoom = false;
 
     private void Awake() {
         graphContainer = transform.Find("graphContainer").GetComponent<RectTransform>();
@@ -42,10 +43,12 @@ public class Window_Graph : MonoBehaviour {
         ShowGraph(valueList, false);
         transform.Find("decreaseBtn").GetComponent<Button_UI>().ClickFunc = () =>
         {
+            isZoom = true;
             ShowGraph(this.valueList, this.inSameGraph, this.maxVisibleValueAmount + 1);
         };
         transform.Find("increaseBtn").GetComponent<Button_UI>().ClickFunc = () =>
         {
+            isZoom = true;
             firstClicked++;
             ShowGraph(this.valueList, this.inSameGraph, this.maxVisibleValueAmount - 1);           
         };
@@ -83,14 +86,16 @@ public class Window_Graph : MonoBehaviour {
                 valueList = historyList;
                 historyList = temp;
             }
-        }*/
-        if (!inSameGraph)
+        }
+        */
+        if (!inSameGraph )//|| isZoom)
         {
             foreach (GameObject gameObject in gameObjectList)
             {
                 Destroy(gameObject);
             }
             gameObjectList.Clear();
+            //isZoom = false;
         }
         if(maxVisibleValueAmount <= 0)
         {
@@ -127,6 +132,7 @@ public class Window_Graph : MonoBehaviour {
         //float xSize = 50f;
         float xSize = graphContainer.sizeDelta.x/maxVisibleValueAmount;
         GameObject lastCircleGameObject = null;
+        //GameObject lastDotGameObject = null;
 
         int xIndex = 0;
 
@@ -173,7 +179,21 @@ public class Window_Graph : MonoBehaviour {
                 gameObjectList.Add(dotConnection); 
             }
             lastCircleGameObject = circleGameObject;
-
+            /*
+            if (inSameGraph)
+            {
+                float yPos = ((historyList[i] - yMinimum) / (yMaximum - yMinimum)) * graphHeight;
+                xPositions.Add(xPosition);
+                GameObject dotGameObject = CreateCircle(new Vector2(xPosition, yPos));
+                gameObjectList.Add(dotGameObject);
+                if (lastDotGameObject != null)
+                {
+                    GameObject dotConnection = CreateDotConnection(lastDotGameObject.GetComponent<RectTransform>().anchoredPosition, dotGameObject.GetComponent<RectTransform>().anchoredPosition, inSameGraph);
+                    gameObjectList.Add(dotConnection);
+                }
+                lastDotGameObject = dotGameObject;
+            }
+            */
             if ((i % 3 == 0) && !inSameGraph)
             {
                 RectTransform labelX = Instantiate(labelTemplateX);
@@ -252,7 +272,12 @@ public class Window_Graph : MonoBehaviour {
             Destroy(gameObject);
         }
         gameObjectList.Clear();
-        this.historyList = null;
+        //this.historyList = null;
+    }
+    public void resetGraph()
+    {
+        ShowGraph(this.valueList, this.inSameGraph);
+        firstClicked = 0;
     }
     void Update()
     {

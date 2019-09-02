@@ -76,6 +76,7 @@
      <Compile Include="Assets\Scripts\database.cs" />
      <Compile Include="Assets\Scripts\DataGenerator.cs" />
      <Compile Include="Assets\Scripts\dataTypeDropdown.cs" />
+     <Compile Include="Assets\Scripts\dirDropdown.cs" />
      <Compile Include="Assets\Scripts\DropdownScript.cs" />
      <Compile Include="Assets\Scripts\graphClicked.cs" />
      <Compile Include="Assets\Scripts\Playbar.cs" />
