@@ -20,8 +20,12 @@ public class Window_Graph : MonoBehaviour {
     private GameObject tooltipGameObject;
     //cache parameters
     private List<float> valueList;
+    private List<float> historyList=null;
+    private List<float> xPositions = new List<float>();
     private bool inSameGraph;
     private int maxVisibleValueAmount = -1;
+    private int now=0;
+    int firstClicked = 0;
 
     private void Awake() {
         graphContainer = transform.Find("graphContainer").GetComponent<RectTransform>();
@@ -42,7 +46,8 @@ public class Window_Graph : MonoBehaviour {
         };
         transform.Find("increaseBtn").GetComponent<Button_UI>().ClickFunc = () =>
         {
-            ShowGraph(this.valueList, this.inSameGraph, this.maxVisibleValueAmount - 1);
+            firstClicked++;
+            ShowGraph(this.valueList, this.inSameGraph, this.maxVisibleValueAmount - 1);           
         };
     }
 
@@ -61,7 +66,24 @@ public class Window_Graph : MonoBehaviour {
     public void ShowGraph(List<float> valueList, bool inSameGraph, int maxVisibleValueAmount = -1) {
         this.valueList = valueList;
         this.inSameGraph = inSameGraph;
-
+        /*
+        if (inSameGraph)
+        {
+            this.historyList = valueList;
+        }
+        else
+        {
+            this.valueList = valueList;
+        }
+        if(historyList != null)
+        {
+            if(historyList.Count > valueList.Count)
+            {
+                List<float> temp = valueList;
+                valueList = historyList;
+                historyList = temp;
+            }
+        }*/
         if (!inSameGraph)
         {
             foreach (GameObject gameObject in gameObjectList)
@@ -77,6 +99,7 @@ public class Window_Graph : MonoBehaviour {
         if (maxVisibleValueAmount > valueList.Count)
         {
             maxVisibleValueAmount = valueList.Count;
+            firstClicked = 0;
         }
         this.maxVisibleValueAmount = maxVisibleValueAmount;
         float graphHeight = graphContainer.sizeDelta.y;
@@ -102,13 +125,47 @@ public class Window_Graph : MonoBehaviour {
         yMaximum = yMaximum + yDif * 0.2f+1;
         yMinimum = yMinimum - yDif * 0.2f-1;
         //float xSize = 50f;
-        float xSize = graphContainer.sizeDelta.x/maxVisibleValueAmount +1;
+        float xSize = graphContainer.sizeDelta.x/maxVisibleValueAmount;
         GameObject lastCircleGameObject = null;
 
         int xIndex = 0;
-        for (int i = Mathf.Max(valueList.Count - maxVisibleValueAmount, 0); i < valueList.Count; i++) {
+
+        if (firstClicked == 1)
+        {
+            RectTransform markLine = GameObject.Find("PlayUI/Canvas/DataGenerator/Window_graph/graphContainer/markLine").GetComponent<RectTransform>();
+            float markLinex = markLine.anchoredPosition.x;
+
+            now = 0;
+            for (now = 0; now < xPositions.Count; ++now)
+            {
+                if (xPositions[now] > markLinex) break;
+            }
+            Debug.Log(now);
+        }
+        
+        xPositions.Clear();
+        int startIndex = 0;
+        int startCount = now;
+        int endIndex = valueList.Count;
+        int endCount = valueList.Count - now;
+        while ((endIndex-startIndex) > maxVisibleValueAmount)
+        {
+            if(startCount > endCount)
+            {
+                startCount--;
+                startIndex++;
+            }
+            else
+            {
+                endCount--;
+                endIndex--;
+            }
+        }
+        //for (int i = Mathf.Max(valueList.Count - maxVisibleValueAmount, 0); i < valueList.Count; i++) {
+        for (int i = startIndex; i < endIndex; i++) {
             float xPosition = xSize + xIndex * xSize;
             float yPosition = ((valueList[i] - yMinimum) / (yMaximum - yMinimum)) * graphHeight;
+            xPositions.Add(xPosition);
             GameObject circleGameObject = CreateCircle(new Vector2(xPosition, yPosition));
             gameObjectList.Add(circleGameObject);
             if (lastCircleGameObject != null) {                
@@ -117,18 +174,21 @@ public class Window_Graph : MonoBehaviour {
             }
             lastCircleGameObject = circleGameObject;
 
-            RectTransform labelX = Instantiate(labelTemplateX);
-            labelX.SetParent(graphContainer,false);
-            labelX.gameObject.SetActive(true);
-            labelX.anchoredPosition = new Vector2(xPosition, -7f);
-            labelX.GetComponent<Text>().text = i.ToString();
-            gameObjectList.Add(labelX.gameObject);
+            if ((i % 3 == 0) && !inSameGraph)
+            {
+                RectTransform labelX = Instantiate(labelTemplateX);
+                labelX.SetParent(graphContainer, false);
+                labelX.gameObject.SetActive(true);
+                labelX.anchoredPosition = new Vector2(xPosition, -7f);
+                labelX.GetComponent<Text>().text = (i/3).ToString();
+                gameObjectList.Add(labelX.gameObject);
 
-            RectTransform dashX = Instantiate(dashTemplateY);
-            dashX.SetParent(graphContainer, false);
-            dashX.gameObject.SetActive(true);
-            dashX.anchoredPosition = new Vector2(xPosition, -3f);
-            gameObjectList.Add(dashX.gameObject);
+                RectTransform dashX = Instantiate(dashTemplateY);
+                dashX.SetParent(graphContainer, false);
+                dashX.gameObject.SetActive(true);
+                dashX.anchoredPosition = new Vector2(xPosition, -3f);
+                gameObjectList.Add(dashX.gameObject);                
+            }
             xIndex++;
 
         }
@@ -192,6 +252,7 @@ public class Window_Graph : MonoBehaviour {
             Destroy(gameObject);
         }
         gameObjectList.Clear();
+        this.historyList = null;
     }
     void Update()
     {

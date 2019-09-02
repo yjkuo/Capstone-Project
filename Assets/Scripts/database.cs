@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.IO;
 using System;
+using System.Windows.Forms;
 
 public class database : MonoBehaviour {
     public struct Item
@@ -36,33 +37,50 @@ public class database : MonoBehaviour {
             data = l;
         }
     }
-    public List<Body> bodyDatabase = new List<Body>();
-    public string[] names;
+    public List<List<Body>> fileDatabase = new List<List<Body>>();
+    public List<string[]> fileBodyNames = new List<string[]>();
 
-    public List<string> getNames()
+    public List<string> getNames(int index)
     {
         List<string> tmp = new List<string>();
-        for(int i = 1; i < names.Length; i++)
+        for(int i = 1; i < fileBodyNames[index].Length; i++)
         {
-            tmp.Add(names[i]);
+            tmp.Add(fileBodyNames[index][i]);
         }
         return tmp;
     }
     // Use this for initialization
     void Start () {
-        getDatabase("Assets/Resources/打擊_export.txt");
+        //getDatabase("Assets/Resources/嚴的投球2_export.txt");
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		
 	}
+    public void importBtnClicked()
+    {
+        OpenFileDialog dialog = new OpenFileDialog();
+        dialog.Filter = "txt files (*.txt)|*.txt";
+        dialog.InitialDirectory = "C:\\Users\\User\\Documents\\Capstone-Project";
+        if (dialog.ShowDialog() == DialogResult.OK)
+        {
+            getDatabase(dialog.FileName);
+            Dropdown dropdown = GameObject.Find("PlayUI/Canvas/Panel/bodyInput/inputFileOption").GetComponent<Dropdown>();
+            dropdown.options.Add(new Dropdown.OptionData() { text = Path.GetFileName(dialog.FileName) });
+            DropdownScript bodyOption = GameObject.Find("PlayUI/Canvas/Panel/bodyInput/bodyOption").GetComponent<DropdownScript>();
+            bodyOption.putBodyNames();
+            bodyOption.gameObject.SetActive(true);
+        }
+
+    }
     void getDatabase(string path)
     {
         StreamReader sr = new StreamReader(path);
         FileInfo fin = new FileInfo("Assets/Resources/Out.csv");
         StreamWriter sw = fin.CreateText();
         List<List<Item>> posDatas = new List<List<Item>>();
+        string[] names;
         while (true)
         {
             string s = sr.ReadLine();
@@ -76,10 +94,16 @@ public class database : MonoBehaviour {
         for(int i = 1; i < names.Length-1; i++)
         {
             posDatas.Add(new List<Item>());
-            sw.Write(names[i] + ",,,,");
+            sw.Write(names[i] + ",,,,,,,,,,");
         }
         posDatas.Add(new List<Item>());
+        fileBodyNames.Add(names);
         sw.WriteLine(names[names.Length-1]);
+        for(int i = 1; i < names.Length; i++)
+        {
+            sw.Write("x-axis,y-axis,z-axis,x-speed,y-speed,z-speed,x-acc,y-acc,z-acc,,");
+        }
+        sw.WriteLine();
         sr.ReadLine();
         sr.ReadLine();
     AddItem:
@@ -87,28 +111,30 @@ public class database : MonoBehaviour {
         string[] linedatas = line.Split((char[])null, StringSplitOptions.RemoveEmptyEntries);
         for (int i = 0; i < names.Length-1; i++)
         {
-            posDatas[i].Add(new Item(float.Parse(linedatas[i * 3 + 1]),
-                                    float.Parse(linedatas[i * 3 + 2]),
-                                    float.Parse(linedatas[i * 3 + 3]),
-                                    float.Parse(linedatas[i * 3 + 4]),
-                                    float.Parse(linedatas[i * 3 + 5]),
-                                    float.Parse(linedatas[i * 3 + 6]),
-                                    float.Parse(linedatas[i * 3 + 7]),
-                                    float.Parse(linedatas[i * 3 + 8]),
-                                    float.Parse(linedatas[i * 3 + 9])));
-            sw.Write(linedatas[i * 3 + 1] + "," + linedatas[i * 3 + 2] + "," + linedatas[i * 3 + 3] + ","
-                + linedatas[i * 3 + 4] + "," + linedatas[i * 3 + 5] + "," + linedatas[i * 3 + 6] + ","
-                + linedatas[i * 3 + 7] + "," + linedatas[i * 3 + 8] + "," + linedatas[i * 3 + 9]);
+            posDatas[i].Add(new Item(float.Parse(linedatas[i * 9 + 1]),
+                                    float.Parse(linedatas[i * 9 + 2]),
+                                    float.Parse(linedatas[i * 9 + 3]),
+                                    float.Parse(linedatas[i * 9 + 4]),
+                                    float.Parse(linedatas[i * 9 + 5]),
+                                    float.Parse(linedatas[i * 9 + 6]),
+                                    float.Parse(linedatas[i * 9 + 7]),
+                                    float.Parse(linedatas[i * 9 + 8]),
+                                    float.Parse(linedatas[i * 9 + 9])));
+            sw.Write(linedatas[i * 9 + 1] + "," + linedatas[i * 9 + 2] + "," + linedatas[i * 9 + 3] + ","
+                + linedatas[i * 9 + 4] + "," + linedatas[i * 9 + 5] + "," + linedatas[i * 9 + 6] + ","
+                + linedatas[i * 9 + 7] + "," + linedatas[i * 9 + 8] + "," + linedatas[i * 9 + 9]);
             sw.Write(",,");
         }
         sw.WriteLine();        
         if (sr.Peek() == -1) sr.Close();
         else goto AddItem;
         sw.Close();
+        List<Body> bodyDatabase = new List<Body>();
         for (int i = 0; i < names.Length - 1; i++)
         {
             bodyDatabase.Add(new Body(names[i+1], posDatas[i]));
         }
+        fileDatabase.Add(bodyDatabase);
 
         /*AddItem:
         string tmp = sr.ReadLine().Replace("name: ", "");
@@ -127,9 +153,10 @@ public class database : MonoBehaviour {
         else goto AddItem;
         */
     }
-    public Body getDatabyName(string name)
+    public Body getDatabyName(int fileIndex, string name)
     {
-        foreach(var item in bodyDatabase)
+        List<Body> bodyDatabase = fileDatabase[fileIndex];
+        foreach (var item in bodyDatabase)
         {
             if (item.name == name) return item;
         }

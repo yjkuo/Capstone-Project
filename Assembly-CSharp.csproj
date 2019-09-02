@@ -75,6 +75,7 @@
      <Compile Include="Assets\Scripts\Controller.cs" />
      <Compile Include="Assets\Scripts\database.cs" />
      <Compile Include="Assets\Scripts\DataGenerator.cs" />
+     <Compile Include="Assets\Scripts\dataTypeDropdown.cs" />
      <Compile Include="Assets\Scripts\DropdownScript.cs" />
      <Compile Include="Assets\Scripts\graphClicked.cs" />
      <Compile Include="Assets\Scripts\Playbar.cs" />
@@ -82,6 +83,7 @@
      <Compile Include="Assets\Scripts\SelectedObject.cs" />
      <None Include="Assets\Resources\unity-chan!\Unity-chan! Model\Art\UnityChanShader\Shader\Unitychan_chara_eye.shader" />
      <None Include="Assets\Resources\unity-chan!\Unity-chan! Model\Art\UnityChanShader\Shader\Unitychan_chara_fuku.shader" />
+     <None Include="Assets\Resources\嚴的投球2_export.txt" />
      <None Include="Assets\Resources\打擊2_export.txt" />
      <None Include="Assets\CodeMonkey\README.txt" />
      <None Include="Assets\Resources\unity-chan!\Unity-chan! Model\Art\UnityChanShader\Shader\Unitychan_chara_fuku_ds.shader" />

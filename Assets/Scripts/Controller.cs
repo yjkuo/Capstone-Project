@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Windows.Forms;
 using System.IO;
+using System.Diagnostics;
 
 public class Controller : MonoBehaviour {
 
@@ -19,8 +20,8 @@ public class Controller : MonoBehaviour {
     void Start () {
         //circlePlate = transform.Find("CirclePlate").transform;
         anim = GetComponent<Animator>();
-        anim.speed = 0f;
-	}
+        anim.speed = 0f;        
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -37,7 +38,6 @@ public class Controller : MonoBehaviour {
             {
                 Transform trans = ray_cast_hit.transform;
             
-                Debug.Log(trans.name.ToString() + "我被點了一下");
             }
         }
     }
@@ -64,7 +64,7 @@ public class Controller : MonoBehaviour {
         isplaying = false;
         slider.value = 0;
         anim.speed = 0f;
-        transform.position = new Vector3(-0.77f, 0.4f, -8.12f);
+        transform.position = new Vector3(-0.97f, 0.4f, -8.12f);
         transform.rotation = Quaternion.Euler(0f, 180f, 0f);
     }
     public void historyBtnClicked()
@@ -75,7 +75,6 @@ public class Controller : MonoBehaviour {
         if (dialog.ShowDialog() == DialogResult.OK)
         {
             StreamReader sr = new StreamReader(dialog.FileName);
-            List<float> data = new List<float>();
             List<database.Body> input = new List<database.Body>();
             List<string> bodyNames = new List<string>();
             List < List < database.Item >> tempList = new List<List<database.Item>>();
@@ -184,6 +183,10 @@ public class Controller : MonoBehaviour {
             }
 
         }
+    }
+    public void openCsvFileBtnClicked()
+    {
+        Process.Start("C:\\Users\\User\\Documents\\Capstone-Project\\Assets\\Resources\\Out1.csv");
     }
     public void childObjClicked(SelectedObject obj)
     {      

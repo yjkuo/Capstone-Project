@@ -6,14 +6,14 @@ using UnityEngine.UI;
 public class DropdownScript : MonoBehaviour {
     database bodydb;
     Dropdown mDropdown;
-    private database.Body body;
+
     // Use this for initialization
     void Start () {
-        mDropdown = GetComponent<Dropdown>();
+        mDropdown = GetComponent<Dropdown>();        
         bodydb = GameObject.FindGameObjectWithTag("Database").GetComponent<database>();
-        List<string> tmp = bodydb.getNames();
-        mDropdown.ClearOptions();
-        mDropdown.AddOptions(tmp);
+        transform.gameObject.SetActive(false);
+
+        
         mDropdown.onValueChanged.AddListener(delegate
         {
             DropdownValueChanged(mDropdown);
@@ -25,10 +25,21 @@ public class DropdownScript : MonoBehaviour {
 	void Update () {
 		
 	}
+    public void putBodyNames()
+    {
+        Dropdown inputFileOption = GameObject.Find("PlayUI/Canvas/Panel/bodyInput/inputFileOption").GetComponent<Dropdown>();
+        List<string> tmp = bodydb.getNames(inputFileOption.value);
+        mDropdown.ClearOptions();
+        mDropdown.AddOptions(tmp);
+    }
     void DropdownValueChanged(Dropdown change)
     {
-        body = bodydb.getDatabyName(change.options[change.value].text);
+        database.Body body;
+        Dropdown inputFileOption = GameObject.Find("PlayUI/Canvas/Panel/bodyInput/inputFileOption").GetComponent<Dropdown>();
+        body = bodydb.getDatabyName(inputFileOption.value,change.options[change.value].text);
+        Dropdown dirOption = GameObject.Find("PlayUI/Canvas/Panel/bodyInput/dirOption").GetComponent<Dropdown>();
+        Dropdown dataTypeOption = GameObject.Find("PlayUI/Canvas/Panel/bodyInput/dataTypeOption").GetComponent<Dropdown>();
 
-        //if (body.name != "NotFound") GameObject.FindGameObjectWithTag("Database").GetComponent<DataGenerator>().createList();
+        if (body.name != "NotFound") GameObject.FindGameObjectWithTag("Database").GetComponent<DataGenerator>().createList(body,dirOption.options[dirOption.value].text, dataTypeOption.options[dataTypeOption.value].text);
     }
 }

@@ -9,7 +9,6 @@ public class DataGenerator : MonoBehaviour {
     public Transform scrollPanel;
     public InputField input;
     public database data;
-    private database.Body body;
     private Window_Graph windowGraph;
 
 	// Use this for initialization
@@ -22,7 +21,7 @@ public class DataGenerator : MonoBehaviour {
 	void Update () {
 		
 	}
-    public void createList(string dir, string type)
+    public void createList(database.Body body, string dir, string type)
     {
         List<float> dataList = new List<float>();
         //foreach (var data in body.data)1
@@ -88,14 +87,5 @@ public class DataGenerator : MonoBehaviour {
         }
         windowGraph.ShowGraph(dataList,false);
                  
-    }
-    public void enterClick()
-    {                
-        Dropdown dropdown = GameObject.Find("PlayUI/Canvas/Panel/bodyInput/bodyOption").GetComponent<Dropdown>();
-        body = data.getDatabyName(dropdown.options[dropdown.value].text);
-        Dropdown dirOption = GameObject.Find("PlayUI/Canvas/Panel/bodyInput/dirOption").GetComponent<Dropdown>();
-        Dropdown dataTypeOption = GameObject.Find("PlayUI/Canvas/Panel/bodyInput/dataTypeOption").GetComponent<Dropdown>();
-
-        if (body.name != "NotFound") createList(dirOption.options[dirOption.value].text, dataTypeOption.options[dataTypeOption.value].text);
     }
 }
